@@ -1,5 +1,11 @@
 /*jslint nodejs:true */
 
+var config = { number_of_tests: 1000
+             , silent: false
+             };
+
+exports.config = config;
+
 function arbBool() {
 	return Math.random() > 0.5 ? true : false;
 }
@@ -60,16 +66,20 @@ function forAll(property) {
 		i,
 		values;
 
-	for (i = 0; i < 100; i ++) {
+	for (i = 0; i < config.number_of_tests; i ++) {
 		values = generators.map(fn);
 
-		if (!property.apply(null, values)) {
+		if (!property.apply(null, values) && !config.silent) {
 			console.log("*** Failed!\n" + values);
 			return;
 		}
 	}
 
-	console.log("+++ OK, passed 100 tests.");
+  if (!config.silent) {
+	  console.log("+++ OK, passed 100 tests.");
+  }
+  
+  return true;
 }
 
 exports.forAll = forAll;
